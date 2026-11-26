@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Atualizar cliente - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-user me-2"></i>Atualizar cliente</h2>
+
+<div class="card shadow-sm form-safa">
+    <div class="card-body">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Erro de regra de negócio, vindo da view -->
+            {% if erro %}
+                <div class="alert alert-danger">{{ erro }}</div>
+            {% endif %}
+
+            <!-- Erro que não pertence a um campo só -->
+            {% if formulario.non_field_errors %}
+                <div class="alert alert-danger">{{ formulario.non_field_errors }}</div>
+            {% endif %}
+
+            {% for atrib in formulario %}
+                <div class="mb-3">
+                    <label for="{{ atrib.id_for_label }}" class="form-label">{{ atrib.label }}</label>
+                    {{ atrib }}
+                    {% if atrib.help_text %}
+                        <small class="text-muted">{{ atrib.help_text }}</small>
+                    {% endif %}
+                    {% if atrib.errors %}
+                        <div class="text-danger small">{{ atrib.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url 'cliente_listar' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

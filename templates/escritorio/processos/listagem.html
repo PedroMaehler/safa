@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Processos - SAFA{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fa-solid fa-scale-balanced me-2"></i>Processos</h2>
+    <a href="{% url 'processo_criar' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus me-1"></i> Novo Processo
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Número</th>
+                        <th>Protocolo</th>
+                        <th>Tipo</th>
+                        <th>Valor pedido</th>
+                        <th>Advogado</th>
+                        <th>Situação</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for processo in processos %}
+                    <tr>
+                        <td>{{ processo.numero }}</td>
+                        <td>{{ processo.dataProtocolo }}</td>
+                        <td>{{ processo.tipo }}</td>
+                        <td>{{ processo.valorCausa|default:"-" }}</td>
+                        <td>{{ processo.advogado }}</td>
+                        <td>{{ processo.situacao }}</td>
+                        <td class="text-center text-nowrap">
+                            <a href="{% url 'processo_visualizar' processo.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Ver">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <a href="{% url 'processo_atualizar' processo.pk %}" class="btn btn-sm btn-outline-warning me-1" title="Atualizar">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <a href="{% url 'processo_deletar' processo.pk %}" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Nenhum processo cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Advogado - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-user-tie me-2"></i>Advogado</h2>
+
+<table class="table table-bordered bg-white tabela-ver">
+        <tr>
+            <th>Nome</th>
+            <td>{{ advogado.nome }}</td>
+        </tr>
+        <tr>
+            <th>OAB</th>
+            <td>{{ advogado.oab }}</td>
+        </tr>
+</table>
+
+<h4 class="mt-4">Processos sob responsabilidade</h4>
+<ul class="list-group">
+    {% for processo in advogado.processo_set.all %}
+    <li class="list-group-item">
+        <a href="{% url 'processo_visualizar' processo.pk %}">{{ processo.numero }}</a> ({{ processo.situacao }})
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Nenhum processo.</li>
+    {% endfor %}
+</ul>
+
+<div class="mt-4">
+    <a href="{% url 'advogado_atualizar' advogado.pk %}" class="btn btn-warning">Atualizar</a>
+    <a href="{% url 'advogado_listar' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Bonificação - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-award me-2"></i>Bonificação</h2>
+
+<table class="table table-bordered bg-white tabela-ver">
+        <tr>
+            <th>Advogado</th>
+            <td>{{ bonificacao.advogado }}</td>
+        </tr>
+        <tr>
+            <th>Recebimento</th>
+            <td>{{ bonificacao.recebimento }}</td>
+        </tr>
+        <tr>
+            <th>Honorários do escritório</th>
+            <td>{{ bonificacao.recebimento.calcularHonorariosEscritorio }}</td>
+        </tr>
+        <tr>
+            <th>Valor (10% dos honorários)</th>
+            <td>{{ bonificacao.valor }}</td>
+        </tr>
+        <tr>
+            <th>Situação</th>
+            <td>{{ bonificacao.situacao }}</td>
+        </tr>
+</table>
+
+<div class="mt-4">
+    <a href="{% url 'bonificacao_atualizar' bonificacao.pk %}" class="btn btn-warning">Atualizar</a>
+    <a href="{% url 'bonificacao_listar' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

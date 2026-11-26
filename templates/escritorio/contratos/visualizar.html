@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Contrato - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-file-signature me-2"></i>Contrato</h2>
+
+<table class="table table-bordered bg-white tabela-ver">
+        <tr>
+            <th>Cliente</th>
+            <td>{{ contrato.cliente }}</td>
+        </tr>
+        <tr>
+            <th>Data de assinatura</th>
+            <td>{{ contrato.dataAssinatura }}</td>
+        </tr>
+        <tr>
+            <th>Área</th>
+            <td>{{ contrato.area }}</td>
+        </tr>
+        <tr>
+            <th>Quem fechou</th>
+            <td>{{ contrato.origem }}</td>
+        </tr>
+        <tr>
+            <th>Percentual do cliente</th>
+            <td>{{ contrato.percentualCliente }}</td>
+        </tr>
+        <tr>
+            <th>Percentual do escritório</th>
+            <td>{{ contrato.percentualEscritorio }}</td>
+        </tr>
+        <tr>
+            <th>Situação</th>
+            <td>{{ contrato.situacao }}</td>
+        </tr>
+        <tr>
+            <th>Processo</th>
+            <td>{{ contrato.processo|default:"aguardando protocolo" }}</td>
+        </tr>
+        <tr>
+            <th>Valor decidido pelo juiz</th>
+            <td>{{ contrato.valorGanho|default:"ainda não informado" }}</td>
+        </tr>
+        <tr>
+            <th>Já recebido</th>
+            <td>{{ contrato.totalRecebido }}</td>
+        </tr>
+        <tr>
+            <th>Falta receber</th>
+            <td>{{ contrato.faltaReceber|default_if_none:"-" }}{% if contrato.faltaReceber < 0 %} (recebido acima do decidido){% endif %}</td>
+        </tr>
+</table>
+
+<div class="mt-4">
+    <a href="{% url 'contrato_atualizar' contrato.pk %}" class="btn btn-warning">Atualizar</a>
+    <a href="{% url 'contrato_listar' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

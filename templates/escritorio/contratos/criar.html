@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo contrato - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-file-signature me-2"></i>Novo contrato</h2>
+<p class="text-muted">Caso de uso 1: Cadastrar contrato. O contrato nasce ativo e sem processo.</p>
+
+<!-- Passos 2 e 3: procurar o cliente pelo CPF ou CNPJ.
+     method="GET" põe o que foi digitado no endereço: /contratos/novo/?cpf=... -->
+<div class="card shadow-sm form-safa mb-3">
+    <div class="card-body">
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="cpf" value="{{ cpf }}" class="form-control"
+                   placeholder="CPF ou CNPJ do cliente">
+            <button type="submit" class="btn btn-outline-primary text-nowrap">
+                <i class="fa-solid fa-magnifying-glass me-1"></i>Procurar
+            </button>
+        </form>
+
+        <!-- [3a] CPF incorreto ou [4a] cliente não cadastrado -->
+        {% if aviso %}
+            <div class="alert alert-warning mt-3 mb-0">
+                {{ aviso }}
+                <a href="{% url 'cliente_criar' %}" class="btn btn-sm btn-primary ms-2">
+                    <i class="fa-solid fa-plus me-1"></i>Cadastrar cliente
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- Passo 4: o sistema mostra o cliente encontrado -->
+        {% if cliente %}
+            <div class="alert alert-success mt-3 mb-0">
+                <strong>{{ cliente.nome }}</strong><br>
+                Telefone: {{ cliente.telefone }} · E-mail: {{ cliente.email|default:"-" }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Passos 5 a 9: os dados do contrato. Só aparece com o cliente encontrado.
+     O form sem action envia para o mesmo endereço, com o ?cpf= junto. -->
+{% if cliente %}
+<div class="card shadow-sm form-safa">
+    <div class="card-body">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Erro de regra de negócio, vindo da view -->
+            {% if erro %}
+                <div class="alert alert-danger">{{ erro }}</div>
+            {% endif %}
+
+            <!-- Erro que não pertence a um campo só -->
+            {% if formulario.non_field_errors %}
+                <div class="alert alert-danger">{{ formulario.non_field_errors }}</div>
+            {% endif %}
+
+            {% for atrib in formulario %}
+                <div class="mb-3">
+                    <label for="{{ atrib.id_for_label }}" class="form-label">{{ atrib.label }}</label>
+                    {{ atrib }}
+                    {% if atrib.help_text %}
+                        <small class="text-muted">{{ atrib.help_text }}</small>
+                    {% endif %}
+                    {% if atrib.errors %}
+                        <div class="text-danger small">{{ atrib.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url 'contrato_listar' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

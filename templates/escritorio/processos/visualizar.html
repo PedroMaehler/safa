@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Processo - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-scale-balanced me-2"></i>Processo</h2>
+
+<table class="table table-bordered bg-white tabela-ver">
+        <tr>
+            <th>Número</th>
+            <td>{{ processo.numero }}</td>
+        </tr>
+        <tr>
+            <th>Data do protocolo</th>
+            <td>{{ processo.dataProtocolo }}</td>
+        </tr>
+        <tr>
+            <th>Tipo</th>
+            <td>{{ processo.tipo }}</td>
+        </tr>
+        <tr>
+            <th>Via</th>
+            <td>{{ processo.via|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Valor pedido na petição inicial</th>
+            <td>{{ processo.valorCausa|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Parcelas recebidas</th>
+            <td>{{ processo.contarParcelasRecebidas }}</td>
+        </tr>
+        <tr>
+            <th>Advogado responsável</th>
+            <td>{{ processo.advogado }}</td>
+        </tr>
+        <tr>
+            <th>Situação</th>
+            <td>{{ processo.situacao }}</td>
+        </tr>
+</table>
+
+<h4 class="mt-4">Contratos vinculados</h4>
+<ul class="list-group">
+    {% for contrato in processo.contratodehonorarios_set.all %}
+    <li class="list-group-item">
+        <a href="{% url 'contrato_visualizar' contrato.pk %}">{{ contrato.cliente }}</a>
+        ({{ contrato.area }}, cliente {{ contrato.percentualCliente }}%):
+        decidido {% if contrato.valorGanho is None %}ainda não informado{% else %}R$ {{ contrato.valorGanho }}{% endif %},
+        recebido R$ {{ contrato.totalRecebido }}
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Nenhum contrato.</li>
+    {% endfor %}
+</ul>
+
+<h4 class="mt-4">Recebimentos</h4>
+<ul class="list-group">
+    {% for recebimento in processo.recebimento_set.all %}
+    <li class="list-group-item">
+        <a href="{% url 'recebimento_visualizar' recebimento.pk %}">{{ recebimento.contrato.cliente }}, parcela {{ recebimento.numeroParcela }}</a>
+        - R$ {{ recebimento.valor }} em {{ recebimento.data }}
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Nenhum recebimento.</li>
+    {% endfor %}
+</ul>
+
+<div class="mt-4">
+    <a href="{% url 'processo_atualizar' processo.pk %}" class="btn btn-warning">Atualizar</a>
+    <a href="{% url 'processo_listar' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

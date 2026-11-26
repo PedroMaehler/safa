@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Recebimentos - SAFA{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fa-solid fa-sack-dollar me-2"></i>Recebimentos</h2>
+    <a href="{% url 'recebimento_criar' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus me-1"></i> Novo Recebimento
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Processo</th>
+                        <th>Cliente</th>
+                        <th>Parcela</th>
+                        <th>Valor recebido</th>
+                        <th>Data</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for recebimento in recebimentos %}
+                    <tr>
+                        <td>{{ recebimento.processo }}</td>
+                        <td>{{ recebimento.contrato.cliente }}</td>
+                        <td>{% if recebimento.numeroParcela == 1 and recebimento.valor == recebimento.contrato.valorGanho %}única{% else %}{{ recebimento.numeroParcela }}{% endif %}</td>
+                        <td>{{ recebimento.valor }}</td>
+                        <td>{{ recebimento.data }}</td>
+                        <td class="text-center text-nowrap">
+                            <a href="{% url 'recebimento_visualizar' recebimento.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Ver">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <a href="{% url 'recebimento_deletar' recebimento.pk %}" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Nenhum recebimento registrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

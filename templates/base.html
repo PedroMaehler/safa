@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SAFA{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Navbar Topo -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="{% url 'inicio' %}">
+                <i class="fa-solid fa-scale-balanced me-2"></i>SAFA
+            </a>
+            <span class="navbar-text text-white">
+                Sistema de Apoio Financeiro e Administrativo
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Menu -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'clientes' in request.path %}active{% endif %}" href="{% url 'cliente_listar' %}">
+                            <i class="fa-solid fa-user"></i> Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'advogados' in request.path %}active{% endif %}" href="{% url 'advogado_listar' %}">
+                            <i class="fa-solid fa-user-tie"></i> Advogados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'contratos' in request.path %}active{% endif %}" href="{% url 'contrato_listar' %}">
+                            <i class="fa-solid fa-file-signature"></i> Contratos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'processos' in request.path %}active{% endif %}" href="{% url 'processo_listar' %}">
+                            <i class="fa-solid fa-scale-balanced"></i> Processos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'recebimentos' in request.path %}active{% endif %}" href="{% url 'recebimento_listar' %}">
+                            <i class="fa-solid fa-sack-dollar"></i> Recebimentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'repasses' in request.path %}active{% endif %}" href="{% url 'repasse_listar' %}">
+                            <i class="fa-solid fa-money-bill-transfer"></i> Repasses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'bonificacoes' in request.path %}active{% endif %}" href="{% url 'bonificacao_listar' %}">
+                            <i class="fa-solid fa-award"></i> Bonificações
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Dynamic Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Django Messages Alert -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% block content %}
+                <!-- Child templates render content here -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

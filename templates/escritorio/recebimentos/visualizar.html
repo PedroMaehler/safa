@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Recebimento - SAFA{% endblock %}
+
+{% block content %}
+<h2><i class="fa-solid fa-sack-dollar me-2"></i>Recebimento</h2>
+
+<table class="table table-bordered bg-white tabela-ver">
+        <tr>
+            <th>Processo</th>
+            <td>{{ recebimento.processo }}</td>
+        </tr>
+        <tr>
+            <th>Cliente</th>
+            <td>{{ recebimento.contrato.cliente }}</td>
+        </tr>
+        <tr>
+            <th>Parcela</th>
+            <td>{% if recebimento.numeroParcela == 1 and recebimento.valor == recebimento.contrato.valorGanho %}única (pagamento único){% else %}{{ recebimento.numeroParcela }} (pagamento parcelado){% endif %}</td>
+        </tr>
+        <tr>
+            <th>Valor decidido pelo juiz</th>
+            <td>{{ recebimento.contrato.valorGanho }}</td>
+        </tr>
+        <tr>
+            <th>Valor bruto recebido</th>
+            <td>{{ recebimento.valor }}</td>
+        </tr>
+        <tr>
+            <th>Forma de pagamento</th>
+            <td>{% if recebimento.processo.ehAdministrativo %}via administrativa{% else %}{{ recebimento.formaPagamento }}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Data</th>
+            <td>{{ recebimento.data }}</td>
+        </tr>
+        <tr>
+            <th>Honorários do escritório</th>
+            <td>{{ honorarios }}</td>
+        </tr>
+        <tr>
+            <th>Fica com o escritório (depois da bonificação)</th>
+            <td>{{ liquido }}</td>
+        </tr>
+</table>
+
+<h4 class="mt-4">Repasse ao cliente</h4>
+<ul class="list-group">
+    {% for repasse in repasses %}
+    <li class="list-group-item">
+        <a href="{% url 'repasse_visualizar' repasse.pk %}">{{ repasse.cliente }}</a>
+        - R$ {{ repasse.valor }} até {{ repasse.dataLimite }} ({{ repasse.situacao }})
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Sem repasse: a parte do cliente foi direto para a conta dele (via administrativa ou destaque de honorários).</li>
+    {% endfor %}
+</ul>
+
+<h4 class="mt-4">Bonificação do advogado</h4>
+<ul class="list-group">
+    {% for bonificacao in bonificacoes %}
+    <li class="list-group-item">
+        <a href="{% url 'bonificacao_visualizar' bonificacao.pk %}">{{ bonificacao.advogado }}</a>
+        - R$ {{ bonificacao.valor }} ({{ bonificacao.situacao }})
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">Sem bonificação: na via administrativa o advogado não recebe.</li>
+    {% endfor %}
+</ul>
+
+<div class="mt-4">
+    <a href="{% url 'recebimento_listar' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

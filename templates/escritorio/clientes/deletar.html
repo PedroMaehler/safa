@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Apagar cliente - SAFA{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm form-safa">
+    <div class="card-body text-center">
+        <h3>Deseja apagar?</h3>
+        <p class="fs-5">{{ cliente }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirmar</button>
+            <a href="{% url 'cliente_listar' %}" class="btn btn-success">Voltar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
